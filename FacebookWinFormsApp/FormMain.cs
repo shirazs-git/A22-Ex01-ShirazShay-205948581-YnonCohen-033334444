@@ -144,7 +144,7 @@ namespace BasicFacebookFeatures
             this.m_ButtonLogin.TabIndex = 36;
             this.m_ButtonLogin.Text = "Login";
             this.m_ButtonLogin.UseVisualStyleBackColor = true;
-            this.m_ButtonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
+            //this.m_ButtonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
             // 
             // listBoxEvents
             // 
@@ -604,13 +604,6 @@ namespace BasicFacebookFeatures
             {
                 m_TextBoxStatus.Text = m_LoggedInUser.Posts[0].Message;
             }
-        }
-
-        private void buttonLogin_Click(object i_Sender, EventArgs i_)
-        {
-            Clipboard.SetText("design.patterns20cc"); /// the current password for Desig Patter
-
-            loginAndInit();
         }
 
         private void buttonSetStatus_Click(object i_Sender, EventArgs i_)

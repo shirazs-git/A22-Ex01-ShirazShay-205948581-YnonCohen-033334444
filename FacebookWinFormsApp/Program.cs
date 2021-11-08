@@ -16,11 +16,13 @@ namespace BasicFacebookFeatures
         {
             Clipboard.SetText("design.patterns20cc");
             FacebookService.s_UseForamttedToStrings = true;
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false); 
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false); 
             //Application.Run(new FormMain());
-            Application.Run(new FormLogin());
+            //StatisticsCalc statisticsCalc = new StatisticsCalc();
+            Application.Run(new FormApplication());
             //LoginResult result = FacebookWrapper.FacebookService.Connect("287779573202574");
+
 
         }
     }

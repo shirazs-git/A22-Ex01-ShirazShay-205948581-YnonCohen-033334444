@@ -16,6 +16,7 @@ namespace BasicFacebookFeatures
 {
     public partial class FormLogin : Form
     {
+        private const string k_AppId = "488886072173610"; 
         private Button m_ButtonLogin;
         private CheckedListBox m_CheckedListBoxPermissions;
         private Label m_LabelPermissions;
@@ -37,32 +38,42 @@ namespace BasicFacebookFeatures
             "user_photos",
             "user_posts",
             "user_videos"
+          
         };
       
 
         public FormLogin()
         {
             initializeComponent();
+            ShowDialog();
+        }
+
+        public User LoggedInUser
+        {
+            get
+            {
+                return m_LoggedInUser;
+            }
         }
 
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object i_Sender, EventArgs i_)
         {
             this.m_UserPermissionsSelection = m_CheckedListBoxPermissions.CheckedItems.Cast<string>().ToList();
 
-            m_LoginResult = FacebookService.Login("287779573202574", this.m_UserPermissionsSelection.ToArray());
+            m_LoginResult = FacebookService.Login(k_AppId, this.m_UserPermissionsSelection.ToArray());
             
             if (!string.IsNullOrEmpty(m_LoginResult.AccessToken))
             {
                 m_LoggedInUser = m_LoginResult.LoggedInUser;
-
-
+                
             }
             else
             {
                 MessageBox.Show(m_LoginResult.ErrorMessage, "Login Failed");
             }
+
 
         }
 
