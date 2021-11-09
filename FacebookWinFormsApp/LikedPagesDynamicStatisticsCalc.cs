@@ -4,7 +4,7 @@ using FacebookWrapper.ObjectModel;
 
 namespace BasicFacebookFeatures
 {
-    public class LikedPagesStatisticsCalc
+    public class LikedPagesStatisticsCalc : StatisticsCalculator
     {
         private Dictionary<string, int> m_TotalPagesByCategory;
 
@@ -35,15 +35,15 @@ namespace BasicFacebookFeatures
             foreach (var categoryGroup in queryLikedPagesByCategory)
             {
                 this.m_TotalPagesByCategory.Clear();
-                StatisticsCalc.InsertIntoDictionaryWithIntValue(this.m_TotalPagesByCategory, categoryGroup.category, categoryGroup.totalPages);
+                StatisticsCalcManager.InsertIntoDictionaryWithIntValue(this.m_TotalPagesByCategory, categoryGroup.category, categoryGroup.totalPages);
             }
 
         }
 
-        public LikedPagesStatisticsCalc(FacebookObjectCollection<Page> i_LikedPageses)
+        public LikedPagesStatisticsCalc(FacebookObjectCollection<Page> i_LikedPages)
         {
             this.m_TotalPagesByCategory = new Dictionary<string, int>();
-            this.r_LikedPagesCollection = i_LikedPageses;
+            this.r_LikedPagesCollection = i_LikedPages;
 
             this.fetchTotalLikedPagesByCategory();
 

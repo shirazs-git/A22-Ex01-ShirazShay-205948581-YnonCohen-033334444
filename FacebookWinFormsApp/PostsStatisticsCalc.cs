@@ -6,7 +6,7 @@ using FacebookWrapper.ObjectModel;
 
 namespace BasicFacebookFeatures
 {
-    public class PostsStatisticsCalc : ITrendCalc
+    public class PostsStatisticsCalc : StatisticsCalculator,IDynamicStatisticsResults
     {
         private  Dictionary<string, int> m_TotalPostsByDateResults;
         private  Dictionary<string, int> m_TotalPostsByTypeResults;
@@ -42,10 +42,7 @@ namespace BasicFacebookFeatures
 
             this.fetchTotalPostsByDate();
             this.fetchTotalPostsByType();
-           
-            
-
-            ;
+        
         }
 
         private void fetchTotalPostsByType()
@@ -65,7 +62,7 @@ namespace BasicFacebookFeatures
 
             foreach (var group in queryPostsByType)
             {
-                StatisticsCalc.InsertIntoDictionaryWithIntValue(this.m_TotalPostsByTypeResults, group.postTypeGroup, group.totalPosts);
+                StatisticsCalcManager.InsertIntoDictionaryWithIntValue(this.m_TotalPostsByTypeResults, group.postTypeGroup, group.totalPosts);
             }
         }
 
@@ -86,16 +83,18 @@ namespace BasicFacebookFeatures
 
             foreach (var group in queryPostsTrend)
             {
-                StatisticsCalc.InsertIntoDictionaryWithIntValue(this.m_TotalPostsByDateResults, group.dateGroup, group.totalPosts);
+                StatisticsCalcManager.InsertIntoDictionaryWithIntValue(this.m_TotalPostsByDateResults, group.dateGroup, group.totalPosts);
             }
 
         }
 
-        public void FetchTrend(string i_GroupByDateFormat)
+        public void FetchDynamicResults(string i_GroupByDateFormat)
         {
             this.m_GroupByDateFormat = i_GroupByDateFormat;
             fetchTotalPostsByDate();
         }
+
+        
     }
 
 }

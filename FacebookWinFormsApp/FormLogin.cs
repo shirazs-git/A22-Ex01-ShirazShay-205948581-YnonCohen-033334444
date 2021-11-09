@@ -112,7 +112,7 @@ namespace BasicFacebookFeatures
             
         }
 
-        private void initLables()
+        private void initLabels()
         {
             this.m_LabelPermissions = new Label();
             this.m_LabelPermissions.AutoEllipsis = true;
@@ -133,7 +133,7 @@ namespace BasicFacebookFeatures
 
             this.initButtonLogin();
             this.initCheckListPermissions();
-            this.initLables();
+            this.initLabels();
 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = AutoScaleMode.Font;

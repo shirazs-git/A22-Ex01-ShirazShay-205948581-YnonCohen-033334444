@@ -5,7 +5,7 @@ using FacebookWrapper.ObjectModel;
 
 namespace BasicFacebookFeatures
 {
-    public class AlbumStatisticsCalc : ITrendCalc
+    public class AlbumsStatisticsCalc : StatisticsCalculator,IDynamicStatisticsResults
     {
         private  string m_GroupByDateFormat;
 
@@ -30,7 +30,7 @@ namespace BasicFacebookFeatures
             }
         }
         
-        public AlbumStatisticsCalc(FacebookObjectCollection<Album> i_Albums, string i_GroupByDateFormat)
+        public AlbumsStatisticsCalc(FacebookObjectCollection<Album> i_Albums, string i_GroupByDateFormat)
         {
             this.m_GroupByDateFormat = i_GroupByDateFormat;
 
@@ -38,7 +38,7 @@ namespace BasicFacebookFeatures
 
             this.m_TotalPhotosByDateResults = new Dictionary<string, int>();
             this.m_TotalAlbumsByDateResults = new Dictionary<string, int>();
-            this.FetchTrend(i_GroupByDateFormat);
+            this.FetchDynamicResults(i_GroupByDateFormat);
 
         }
 
@@ -47,7 +47,7 @@ namespace BasicFacebookFeatures
         {
             
             this.m_TotalAlbumsByDateResults.Clear();
-            
+
             var queryAlbumsTrend = from album in this.r_AlbumsCollection
 
                                    group album by album.CreatedTime.Value.ToString(this.m_GroupByDateFormat)
@@ -65,7 +65,7 @@ namespace BasicFacebookFeatures
             foreach (var dateGroup in queryAlbumsTrend)
             {
                 
-                StatisticsCalc.InsertIntoDictionaryWithIntValue(this.m_TotalAlbumsByDateResults, dateGroup.date, dateGroup.totalAlbums);
+                StatisticsCalcManager.InsertIntoDictionaryWithIntValue(this.m_TotalAlbumsByDateResults, dateGroup.date, dateGroup.totalAlbums);
 
             }
         }
@@ -93,31 +93,17 @@ namespace BasicFacebookFeatures
 
                 foreach (var dateGroup in queryPhotosAlbum)
                 {
-                    StatisticsCalc.InsertIntoDictionaryWithIntValue(this.m_TotalPhotosByDateResults,dateGroup.date,dateGroup.totalPhotos);
+                    StatisticsCalcManager.InsertIntoDictionaryWithIntValue(this.m_TotalPhotosByDateResults,dateGroup.date,dateGroup.totalPhotos);
 
                 }
             }
         }
 
 
-        public bool TryAccessCollection<T>(FacebookObjectCollection<T> i_Collection)
-        {
-            try
-            {
-                int facebookObjectCollection = i_Collection.Count;
-                return true;
-
-            }
-            catch (Facebook.FacebookOAuthException e)
-            {
-                return false;
-
-            }
-
-        }
+        
 
 
-        public void FetchTrend(string i_GroupByDateFormat)
+        public void FetchDynamicResults(string i_GroupByDateFormat)
         {
             this.m_GroupByDateFormat = i_GroupByDateFormat;
             this.fetchTotalAlbumsByDate();

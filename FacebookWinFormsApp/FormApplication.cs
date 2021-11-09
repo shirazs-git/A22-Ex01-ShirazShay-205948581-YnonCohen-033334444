@@ -15,7 +15,7 @@ namespace BasicFacebookFeatures
 {
     public partial class FormApplication : Form
     {
-        private StatisticsCalc m_UserStatisticsCalc;
+        private StatisticsCalcManager m_UserStatisticsCalcManager;
         private User m_LoggedInUser;
         private Chart m_ChartPhotoTrend;
         private Chart m_ChartPostsTrend;
@@ -29,7 +29,7 @@ namespace BasicFacebookFeatures
         public FormApplication()
         {
             FacebookWrapper.FacebookService.s_CollectionLimit = 5;
-            this.m_UserStatisticsCalc = new StatisticsCalc();
+            this.m_UserStatisticsCalcManager = new StatisticsCalcManager();
             
             initializeComponent();
             //
@@ -48,7 +48,7 @@ namespace BasicFacebookFeatures
             
             this.m_ChartPostsTrend.ChartAreas.Add(chartArea);
             this.m_ChartPostsTrend.Legends.Add(legend);
-            this.m_ChartPostsTrend.Location = new System.Drawing.Point(8, 187); ;
+            this.m_ChartPostsTrend.Location = new System.Drawing.Point(8, 187);
 
             Series totalPostsTrendSeries = new Series();
             totalPostsTrendSeries.Name = "Total Posts";
@@ -110,8 +110,11 @@ namespace BasicFacebookFeatures
 
         private void initChartLikedPageByCategory()
         {
-            Dictionary<string,int> likedPagesByCategoryResults = this.m_UserStatisticsCalc.LikedPagesStatisticsCalc.TotalPagesByCategory;
-            
+            //Dictionary<string,int> likedPagesByCategoryResults = this.m_UserStatisticsCalcManager.LikedPagesStatisticsCalc.TotalPagesByCategory;
+
+            Dictionary<string, int> likedPagesByCategoryResults =
+                this.m_UserStatisticsCalcManager.GetLikedPageByCategoryResults();
+
             this.m_ChartLikedPage = new Chart();
 
             ChartArea chartArea = new ChartArea();
@@ -141,8 +144,9 @@ namespace BasicFacebookFeatures
 
         private void initChartPostsByPostType()
         {
-            Dictionary<string,int> totalPostByPostTypeResults = this.m_UserStatisticsCalc.PostsStatisticsCalc.TotalPostsByTypeResults;
-
+            //Dictionary<string,int> totalPostByPostTypeResults = this.m_UserStatisticsCalcManager.PostsStatisticsCalc.TotalPostsByTypeResults;
+            Dictionary<string, int> totalPostByPostTypeResults =
+                this.m_UserStatisticsCalcManager.GetPostsByPostTypeResults();
 
             this.m_ChartPostsByType = new Chart();
             ChartArea chartArea = new ChartArea();
@@ -177,7 +181,7 @@ namespace BasicFacebookFeatures
             this.m_ComboBoxGroupByDate = new ComboBox();
             this.m_ComboBoxGroupByDate.DropDownStyle = ComboBoxStyle.DropDown;
             this.m_ComboBoxGroupByDate.Location = new System.Drawing.Point(778, 11);
-            this.m_ComboBoxGroupByDate.Size = new System.Drawing.Size(148, 123); ;
+            this.m_ComboBoxGroupByDate.Size = new System.Drawing.Size(148, 123);
             
             this.m_ComboBoxGroupByDate.Items.AddRange(this.m_GroupByOptions);
             this.m_ComboBoxGroupByDate.SelectedItem = "Year";
@@ -205,8 +209,9 @@ namespace BasicFacebookFeatures
                     this.m_GroupByDateFormat = "yyyy";
                     break;
             }
-            this.m_UserStatisticsCalc.AlbumStatisticsCalc.FetchTrend(this.m_GroupByDateFormat);
-            this.m_UserStatisticsCalc.PostsStatisticsCalc.FetchTrend(this.m_GroupByDateFormat);
+            //his.m_UserStatisticsCalcManager.AlbumsStatisticsCalc.FetchDynamicResults(this.m_GroupByDateFormat);
+            //this.m_UserStatisticsCalcManager.PostsStatisticsCalc.FetchDynamicResults(this.m_GroupByDateFormat);
+            this.m_UserStatisticsCalcManager.ReFetchDynamicData(this.m_GroupByDateFormat);
             this.initSeriesAlbumsAndPhotosTrend();
             this.initSeriesPostsTrend();
 
@@ -215,15 +220,21 @@ namespace BasicFacebookFeatures
 
         private void initSeriesAlbumsAndPhotosTrend()
         {
-            AlbumStatisticsCalc albumStatisticsResults = this.m_UserStatisticsCalc.AlbumStatisticsCalc;
+            //AlbumsStatisticsCalc albumsStatisticsCalc = this.m_UserStatisticsCalcManager.AlbumsStatisticsCalc;
+
+            Dictionary<string, int> totalPhotosByDateResults =
+                this.m_UserStatisticsCalcManager.GetAlbumsPhotosByDateResults();
+
+            Dictionary<string, int> totalAlbumsByDateResults =
+                this.m_UserStatisticsCalcManager.GetAlbumsByDateResults();
 
             this.m_ChartPhotoTrend.Series["Total Photos"].Points.Clear();
 
-            this.m_ChartPhotoTrend.Series["Total Photos"].Points.DataBindXY(albumStatisticsResults.TotalPhotosByDateResults.Keys, albumStatisticsResults.TotalPhotosByDateResults.Values);
+            this.m_ChartPhotoTrend.Series["Total Photos"].Points.DataBindXY(totalPhotosByDateResults.Keys, totalPhotosByDateResults.Values);
 
             this.m_ChartPhotoTrend.Series["Total Albums"].Points.Clear();
 
-            this.m_ChartPhotoTrend.Series["Total Albums"].Points.DataBindXY(albumStatisticsResults.TotalAlbumsByDateResults.Keys, albumStatisticsResults.TotalAlbumsByDateResults.Values);
+            this.m_ChartPhotoTrend.Series["Total Albums"].Points.DataBindXY(totalAlbumsByDateResults.Keys, totalAlbumsByDateResults.Values);
             
             
             this.m_ChartPhotoTrend.AlignDataPointsByAxisLabel(PointSortOrder.Ascending);
@@ -234,7 +245,8 @@ namespace BasicFacebookFeatures
 
         private void initSeriesPostsTrend()
         {
-            Dictionary<string, int> postsTrendResults = this.m_UserStatisticsCalc.PostsStatisticsCalc.TotalPostsByDateResults;
+            //Dictionary<string, int> postsTrendResults = this.m_UserStatisticsCalcManager.PostsStatisticsCalc.TotalPostsByDateResults;
+            Dictionary<string, int> postsTrendResults = this.m_UserStatisticsCalcManager.GetPostsByDateResults();
 
             this.m_ChartPostsTrend.Series["Total Posts"].Points.Clear();
 
